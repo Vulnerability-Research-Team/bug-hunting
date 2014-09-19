@@ -1,0 +1,101 @@
+!mona find -s "\xff\xe4" -m RemotelyAnywhere.dll
+
+ 
+
+ 
+
+1. loc_10114642 (grabbed absolute offset from ida pro, subtract from base address below)
+
+loc_10111647
+
+ 
+
+100000000 base address for .DLL files
+
+ 
+
+2. grab base address from mona modules (will be random everytime if aslr is enabled):
+
+!mona modules -o
+
+ADF00D     ----------------------------------------------------------------------------------------------------------------------------------
+
+0BADF00D    Module info :
+
+0BADF00D   ----------------------------------------------------------------------------------------------------------------------------------
+
+0BADF00D    Base       | Top        | Size       | Rebase | SafeSEH | ASLR  | NXCompat | OS Dll | Version, Modulename & Path
+
+0BADF00D   ----------------------------------------------------------------------------------------------------------------------------------
+
+0BADF00D    0x00400000 | 0x00418000 | 0x00018000 | False  | True    | True  |  True    | False  | 10.0.2613 [RemotelyAnywhere.exe] (C:\Program Files\RemotelyAnywhere\x86\RemotelyAnywhere.exe)
+
+0BADF00D    0x00910000 | 0x00ec4000 | 0x005b4000 | True   | False   | True  |  True    | False  | 11.3.2819 [RemotelyAnywhere.dll] (C:\Program Files\RemotelyAnywhere\x86\RemotelyAnywhere.dll)
+
+0BADF00D   ----------------------------------------------------------------------------------------------------------------------------------
+
+ 
+
+3. Use programming calc: (hex/dword)
+
+ 
+
+Base     IDA offset
+
+910000 + 114642 =   A24642
+
+      = A21647
+
+111647
+
+ 
+
+4. Immunity Breakpoint:
+
+ 
+
+Click on the goto button to go to address in disassembler:
+
+Enter = 00A24642 (result from above)
+
+ 
+
+5. Confirm its the ASCII LIST address, and add breakpoint by double clicking:
+
+00A24642   68 D038DF00      PUSH Remote_1.00DF38D0                   ; ASCII "LIST"
+
+ 
+
+ 
+
+ 
+
+ 
+
+a big part of it is just using the app as "indended" 
+
+and understanding it
+
+that's what i do
+
+understand what the app is supposed to do, I mean we all know ftp, but are there additional commands? some of them not implemented
+
+etc
+
+Flores, Rick S. -ND 12:52 PM
+
+exactly. i agree. going thru it manually to understand functionality, then scripting out the fuzzer or what not
+
+Champion, Blake 12:52 PM
+
+yup
+
+then you put break points everywhere
+
+and then go back through the app
+
+as intended
+
+are you hitting those bps? etc
+
+if so, what are the parameters passed
